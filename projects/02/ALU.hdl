@@ -42,19 +42,31 @@ CHIP ALU {
         ng; // 1 if (out < 0),  0 otherwise
 
     PARTS:
-   // Put you code here:
-   Mux16(a=x, b=false, sel=zx, out=x1);
-   Not16(in=x1, out=notX1);
-   Mux16(a=x1, b=notX1, sel=nx, out=x2);
+    // Put you code here:
+    Mux16(a=x, b=false, sel=zx, out=zxOut);
+    Not16(in=zxOut, out=notZxOut);
+    Mux16(a=zxOut, b=notZxOut, sel=nx, out=nxOut);
 
-   Mux16(a=y, b=false, sel=zy, out=y1);
-   Not16(in=y1, out=notY1);
-   Mux16(a=y1, b=notX1, sel=ny, out=y2);
+    Mux16(a=y, b=false, sel=zy, out=zyOut);
+    Not16(in=zyOut, out=notZyOut);
+    Mux16(a=zyOut, b=notZyOut, sel=ny, out=nyOut);
 
-   Add16(a=x2, b=y2, out=xPlusY);
-   And16(a=x2, b=y2, out=xAndY);
-   Mux16(a=xAndY, b=xPlusY, sel=f, out=fOut);
+    And16(a=nxOut, b=nyOut, out=fAndOut);
+    Add16(a=nxOut, b=nyOut, out=fAddOut);
+    Mux16(a=fAndOut, b=fAddOut, sel=f, out=fOut);
 
-   Not16(in=fOut, out=notFOut);
-   Mux16(a=fOut, b=notFOut, sel=no, out=out);
+    Not16(in=fOut, out=notFOut);
+    Mux16(a=fOut, b=notFOut, sel=no, out=result);
+    Or16(a=result, b=false, out=out);
+
+    Or16(a=result, b=false, out[0..7]=resultLow);
+    Or16(a=result, b=false, out[8..15]=resultHigh);
+
+    Or8Way(in=resultLow, out=low8);
+    Or8Way(in=resultHigh, out=high8);
+    Or(a=low8, b=high8, out=notZr);
+    Not(in=notZr, out=zr);
+
+    Or16(a=result, b=false, out[15]=sign);
+    And(a=sign, b=true, out=ng);
 }
