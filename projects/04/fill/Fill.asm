@@ -12,3 +12,57 @@
 // the screen should remain fully clear as long as no key is pressed.
 
 // Put your code here.
+
+// initialize
+(INIT)
+@8191
+D=A
+@R0
+M=D
+
+// check keyboard
+(CHECKKBD)
+@KBD
+D=M
+@FILL
+D;JNE
+@CLEAN
+0;JMP
+
+// fill screen
+(FILL)
+@R0
+D=M
+@INIT
+D;JLT
+
+@SCREEN
+D=A
+@R0
+D=D+M
+A=D
+M=-1
+
+@R0
+M=M-1
+@FILL
+0;JMP
+
+// clean screen
+(CLEAN)
+@R0
+D=M
+@INIT
+D;JLT
+
+@SCREEN
+D=A
+@R0
+D=D+M
+A=D
+M=0
+
+@R0
+M=M-1
+@CLEAN
+0;JMP
