@@ -6,3 +6,4 @@ Building a general-purpose computer system and a modern software hierarchy. Offi
 ## Project History
 - [x] 2023/04/26 Boolean logic is done in project 01.
 - [x] 2023/04/26 Boolean arithmetic is done in project 02.
+- [x] 2023/04/28 Memory is done in project 03.
